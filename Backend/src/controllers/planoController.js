@@ -1,19 +1,19 @@
 import conexao from "../config/db.js";
 
-export const listarUsuario = async (req, res) => {
+export const listarPlanos = async (req, res) => {
     let conn;
     try {
         conn = await conexao.getConnection();
 
-        const [usuarios] = await conn.query(`
-            SELECT id,nome,email,senha,perfil,criado_em FROM usuarios 
+        const [planos] = await conn.query(`
+            SELECT id,nome,descricao,valor,duracao_meses,ativo FROM planos 
             `);
 
-        res.status(200).json(usuarios);
+        res.status(200).json(planos);
 
     } catch (error) {
 
-        res.status(500).json({ msg: "Erro ao listar usuarios" });
+        res.status(500).json({ msg: "Erro ao listar planos" });
 
     } finally {
 

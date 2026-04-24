@@ -8,7 +8,7 @@ export const listarUsuario = async (req, res) => {
 
         const [usuarios] = await conn.query(`
             SELECT id,nome,email,senha,perfil,criado_em FROM usuarios 
-            `);
+            `)
 
         res.status(200).json(usuarios);
 
@@ -56,4 +56,65 @@ export const criarUsuario = async (req, res) => {
     } finally {
         if (conn) conn.release();
     }
+}
+
+export const atualizarUsuario = async (req, res) => {
+
+    let conn;
+    console.log(req.body);
+    try {
+        conn = await conexao.getConnection();
+        const { nome, email, perfil } = req.body;
+        const id = req.params.id;
+
+        if (!nome || !email) {
+            return res.status(400).json({ messagem: "Nome, email são obrigatórios" })
+        }
+
+        const [Usuario] = await conn.query(`
+            UPDATE usuarios SET nome = ?,email  = ?, perfil = ? WHERE id = ?
+            `, [nome, email, perfil || "admin", id])
+
+
+            res.status(200).json({ msg: "Usuario atualizado com sucesso" });
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ msg: "Erro ao atualizar usuário", erro: error.message });
+
+    } finally {
+
+        if (conn) conn.release();
+
+    }
+
+}
+
+export const deletarUsuario = async (req, res) => {
+
+    let conn;
+    console.log(req.body);
+    try {
+        conn = await conexao.getConnection();
+   
+        const id = req.params.id;
+
+
+        const [Usuario] = await conn.query(`
+            DELETE FROM usuarios WHERE id = ?
+            `, [id])
+
+
+            res.status(200).json({ msg: "Usuario deletado com sucesso" });
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ msg: "Erro ao deletar usuário", erro: error.message });
+
+    } finally {
+
+        if (conn) conn.release();
+
+    }
+
 }

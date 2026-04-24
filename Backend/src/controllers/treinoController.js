@@ -6,7 +6,7 @@ export const listarTreino = async (req, res) => {
         conn = await conexao.getConnection();
 
         const [Treino] = await conn.query(`
-            SELECT id,aluno_id,instrutor_id,senha,perfil,criado_em FROM treinos 
+            SELECT id,aluno_id,instrutor_id,nome_treino,decricao,data_inicio,data_fim FROM treinos 
             `);
 
         res.status(200).json(Treino);
